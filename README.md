@@ -122,15 +122,4 @@ pip install pygame
 python game_pygame.py
 ```
 
----
 
-## 7. Examiner Viva / Defense Q&A
-
-**Q1: How did you implement shooting and weapon cooldowns?**  
-*Answer:* The player vessel tracks a `fireTimer` updated via delta-time ($\Delta t$). When the user holds <kbd>Space</kbd> or clicks the mouse, if `fireTimer <= 0`, a new `Laser` object is instantiated and pushed to the `lasers` array with a negative vertical velocity ($v_y = -720\text{ px/s}$), resetting `fireTimer = 0.16s`.
-
-**Q2: How does the game satisfy the lab's "collect items and avoid hazards" rule?**  
-*Answer:* We created a hybrid mechanic: hazards (asteroids and tracking mines) damage the player on direct collision. However, when blasted with mining lasers, they shatter and drop valuable Cosmic Crystals and Nova Cores that scatter across the field, incentivizing the player to dodge and collect them to maintain high combo multipliers.
-
-**Q3: How is screen shake implemented without disrupting UI coordinates?**  
-*Answer:* Screen shake applies a temporary translation offset $(dx, dy)$ to the canvas 2D rendering context right before rendering world entities, followed by a `ctx.restore()` to keep the heads-up display (HUD) cleanly pinned in place.
