@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro-Miner: Combat Harvest — 2D Space Shooter & Harvester</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="arcade-wrapper">
+    <!-- Top Header -->
+    <header class="game-header">
+      <div class="header-title">
+        <span class="badge">Multimedia Systems Lab</span>
+        <h1>ASTRO-MINER: <span class="highlight">COMBAT HARVEST</span></h1>
+      </div>
+      <div class="header-controls">
+        <button id="btn-audio-toggle" class="btn-icon" title="Toggle Sound (M)">
+          <span id="audio-icon">🔊</span> SOUND: <span id="audio-status">ON</span>
+        </button>
+        <button id="btn-debug-toggle" class="btn-icon" title="Toggle Collision Hitboxes (F1)">
+          <span>🎯</span> HITBOX: <span id="debug-status">OFF</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <main class="game-container" id="game-container">
+      <canvas id="gameCanvas" width="900" height="600"></canvas>
+
+      <!-- HUD: Heads-Up Display -->
+      <div id="hud" class="hud-overlay">
+        <div class="hud-item">
+          <span class="hud-label">SCORE</span>
+          <span class="hud-val" id="hud-score">0000</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">COMBO</span>
+          <span class="hud-val combo-val" id="hud-multiplier">x1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">LIVES</span>
+          <div class="lives-container" id="hud-lives">
+            <span class="life-icon">🚀</span>
+            <span class="life-icon">🚀</span>
+            <span class="life-icon">🚀</span>
+          </div>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">TIME</span>
+          <span class="hud-val" id="hud-time">00:00</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">HIGH SCORE</span>
+          <span class="hud-val" id="hud-high">0000</span>
+        </div>
+        <!-- Active Power-up Gauge -->
+        <div class="hud-powerup" id="hud-powerup-bar">
+          <span class="powerup-name" id="powerup-label">NONE</span>
+          <div class="gauge-bar-bg">
+            <div class="gauge-bar-fill" id="powerup-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Screen Modal -->
+      <div id="screen-start" class="modal-screen active">
+        <div class="modal-card">
+          <div class="modal-glow"></div>
+          <h2 class="title-glow">ASTRO-MINER</h2>
+          <p class="subtitle">2D Space Shooter & Cosmic Mineral Harvester</p>
+
+          <div class="customization-highlight">
+            <div class="custom-tag">LAB TEST 2 CUSTOMIZATION</div>
+            <p><strong>Theme:</strong> Deep Space Armed Mining Drone</p>
+            <p><strong>Combat:</strong> ⚡ Mining Lasers (Twin Cannons & Triple Spread Shot)</p>
+            <p><strong>Hazards & Drops:</strong> 🪨 Shatter Asteroids & 💣 Mines into 💎 Crystals & 🌟 Nova Cores</p>
+            <p><strong>Special Abilities:</strong> 🧲 Tractor Beam & 🛡️ Plasma Shield + Combo Chain Scoring</p>
+          </div>
+
+          <div class="controls-guide">
+            <h3>PILOT CONTROLS</h3>
+            <div class="keys-grid">
+              <div class="key-box"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> or <span class="key">▲</span><span class="key">◄</span><span class="key">▼</span><span class="key">►</span><span>Move Ship</span></div>
+              <div class="key-box"><span class="key">SPACE</span> or <span class="key">Click</span><span>Fire Lasers</span></div>
+              <div class="key-box"><span class="key">Mouse Drag</span><span>Pilot Vessel</span></div>
+              <div class="key-box"><span class="key">P</span> or <span class="key">ESC</span><span>Pause / Resume</span></div>
+              <div class="key-box"><span class="key">M</span><span>Toggle Audio</span></div>
+              <div class="key-box"><span class="key">F1</span><span>Collision Hitbox Debug</span></div>
+            </div>
+          </div>
+
+          <button id="btn-start" class="btn-action pulse">LAUNCH MISSION [SPACE / ENTER]</button>
+        </div>
+      </div>
+
+      <!-- Pause Screen Modal -->
+      <div id="screen-pause" class="modal-screen">
+        <div class="modal-card">
+          <h2 class="pause-title">MISSION PAUSED</h2>
+          <p>Thrusters on standby. Systems nominal.</p>
+          <div class="pause-actions">
+            <button id="btn-resume" class="btn-action">RESUME [ESC / P]</button>
+            <button id="btn-pause-restart" class="btn-secondary">ABORT & RESTART</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Over Screen Modal -->
+      <div id="screen-gameover" class="modal-screen">
+        <div class="modal-card">
+          <h2 class="gameover-title">HULL BREACH DETECTED</h2>
+          <p class="gameover-subtitle">Miner vessel decommissioned</p>
+
+          <div class="stats-summary">
+            <div class="stat-row">
+              <span>FINAL HARVEST SCORE:</span>
+              <span id="final-score" class="stat-highlight">0</span>
+            </div>
+            <div class="stat-row">
+              <span>BEST HARVEST SCORE:</span>
+              <span id="best-score">0</span>
+            </div>
+            <div class="stat-row">
+              <span>SURVIVAL DURATION:</span>
+              <span id="final-time">00:00</span>
+            </div>
+            <div class="stat-row">
+              <span>MAX COMBO CHAIN:</span>
+              <span id="final-combo">x1</span>
+            </div>
+          </div>
+
+          <button id="btn-restart" class="btn-action pulse">RE-ENGAGE SYSTEM [R / ENTER]</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer with Lab Test Metadata -->
+    <footer class="game-footer">
+      <div class="footer-info">
+        <span>🎮 <strong>Multimedia Systems Lab — Lab Test 2</strong></span>
+        <span>•</span>
+        <span>2D Space Shooter • Procedural Web Audio API • AABB & Circle Collision Detection</span>
+      </div>
+      <div class="footer-links">
+        <span>Press <kbd>R</kbd> anytime to restart</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Audio Synthesis & Core Game Scripts -->
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
