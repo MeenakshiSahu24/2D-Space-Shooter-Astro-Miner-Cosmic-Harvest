@@ -87,24 +87,9 @@ $$\text{Overlap} \iff (x_1 < x_2 + w_2) \land (x_1 + w_1 > x_2) \land (y_1 < y_2
 
 ---
 
-## 5. Multimedia System Integration
 
-1. **Procedural Web Audio API:**
-   - **Mining Laser:** Fast downward pitch ramp ($880\text{ Hz} \to 180\text{ Hz}$) using a sawtooth oscillator.
-   - **Laser Hit Impact:** Brief triangle wave frequency drop ($420\text{ Hz} \to 120\text{ Hz}$).
-   - **Shatter Crunch:** Low-frequency square wave crunch ($220\text{ Hz} \to 60\text{ Hz}$).
-   - **Crystal Pickup:** Ascending chime ($587\text{ Hz} \to 880\text{ Hz}$).
-   - **Nova Core:** 4-stage ascending arpeggio ($E_5 \to G^\#_5 \to B_5 \to E_6$).
-   - **Hull Collision:** Filtered noise burst + sub-bass punch ($140\text{ Hz} \to 30\text{ Hz}$).
-   - **Chiptune BGM:** 16-step procedural D-minor bassline arpeggio running on an internal clock.
-2. **Visual Animation & Juice:**
-   - Screen Shake: Dynamic $\pm 5\text{px}$ camera offset with delta-time decay.
-   - Vector procedural rendering: Ship, twin lasers, spread shots, shield bubble, crystals, and jagged asteroids.
-   - Particle explosion engine: Radial debris velocity with alpha decay on pickups and shatter events.
 
----
-
-## 6. How to Run
+## . How to Run
 
 ### Method 1: Instant Browser Launch (Zero Setup)
 1. Navigate to `arcade-game/`.
